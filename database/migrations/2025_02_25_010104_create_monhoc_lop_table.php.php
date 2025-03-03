@@ -11,7 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::create('monhoc_lop', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('monhoc_id')->unsigned();
+            $table->foreign('monhoc_id')->references('id')->on('monhocs')->onDelete('cascade');
+            $table->integer('lop_id')->unsigned();
+            $table->foreign('lop_id')->references('id')->on('lops')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::drop('monhoc_lop');
     }
 };

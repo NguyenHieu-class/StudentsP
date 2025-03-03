@@ -11,7 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::table('diems', function (Blueprint $table) {
+            $table->integer('monhoc_id')->unsigned();
+            $table->foreign('monhoc_id')->references('id')->on('monhocs')->onDelete('cascade');
+        });
     }
 
     /**
@@ -19,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('diems', function (Blueprint $table) {
+            $table->dropColumn('monhoc_id');
+        });
     }
 };

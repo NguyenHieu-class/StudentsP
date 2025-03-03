@@ -11,7 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::create('lops', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('malop', 10)->unique();
+            $table->string('tenlopvt');
+            $table->string('tenlop');
+            $table->integer('khoa_id')->unsigned();
+            $table->foreign('khoa_id')->references('id')->on('khoas')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('lops');
     }
 };

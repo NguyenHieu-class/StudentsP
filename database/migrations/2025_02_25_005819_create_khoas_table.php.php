@@ -11,14 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::create('khoas', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('makhoa',20);
+            $table->string('tenkhoa',50);
+            $table->timestamps();
+        });
     }
 
     /**
      * Reverse the migrations.
+     * 
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('khoas');
     }
 };

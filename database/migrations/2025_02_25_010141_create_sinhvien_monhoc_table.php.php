@@ -11,7 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::create('sinhvien_monhoc', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('monhoc_id')->unsigned();
+            $table->foreign('monhoc_id')->references('id')->on('monhocs')->onDelete('cascade');
+            $table->integer('sinhvien_id')->unsigned();
+            $table->foreign('sinhvien_id')->references('id')->on('sinhviens')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('sinhvien_monhoc');
     }
 };

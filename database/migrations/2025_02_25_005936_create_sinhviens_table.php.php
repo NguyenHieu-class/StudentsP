@@ -11,7 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::create('sinhviens', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('masv', 10)->unique();
+            $table->string('hosv', 50);
+            $table->string('tensv', 50);
+            $table->boolean('gioitinh');
+            $table->date('ngaysinh');
+            $table->text('quequan');
+            $table->integer('lop_id')->unsigned();
+            $table->foreign('lop_id')->references('id')->on('lops')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('sinhviens');
     }
 };
