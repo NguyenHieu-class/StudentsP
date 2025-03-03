@@ -55,7 +55,7 @@ class StudentController extends Controller
             }
         }
 
-        DB::statement(DB::raw('set @rownum=0'));
+        DB::statement('set @rownum=0');
         $student=DB::table('sinhviens')->join('lops','sinhviens.lop_id','=','lops.id')->select([
             DB::raw('@rownum  := @rownum  + 1 AS rownum'),
             'sinhviens.id',
@@ -91,7 +91,9 @@ class StudentController extends Controller
             })
             ->rawColumns([ 'rownum','action','hotensv','gioitinhsv']);
         if ($keyword = $request->get('search')['value']) {
-            $datatables->filterColumn('rownum', 'whereRaw', '@rownum  + 1 like ?', ["%{$keyword}%"]);
+            $datatables->filterColumn('rownum', function($query, $keyword) {
+                $query->whereRaw('@rownum  + 1 like ?', ["%{$keyword}%"]);
+            });
         }
         return $datatables->make(true);
     }
@@ -145,8 +147,7 @@ class StudentController extends Controller
      */
     public function getexport(Request $request){
         $lop="";
-        die($request);
-        DB::statement(DB::raw('set @rownum=0'));
+        DB::statement('set @rownum=0');
         $student=DB::table('sinhviens')->join('lops','sinhviens.lop_id','=','lops.id')->select([
             DB::raw('@rownum  := @rownum  + 1 AS rownum'),
             'sinhviens.id',

@@ -38,7 +38,7 @@ class RetestController extends Controller
 //                }
 //            }
 //        }
-        DB::statement(DB::raw('set @rownum=0'));
+        DB::statement('set @rownum=0');
         $diem = DB::table('diems')->join('sinhviens', 'diems.sinhvien_id', '=', 'sinhviens.id')
             ->join('monhocs', 'diems.monhoc_id', '=', 'monhocs.id')
             ->join('lops', 'sinhviens.lop_id', '=', 'lops.id')
@@ -68,7 +68,9 @@ class RetestController extends Controller
             })
             ->rawColumns(['rownum', 'hotensv','diemtb']);
         if ($keyword = $request->get('search')['value']) {
-            $datatables->filterColumn('rownum', 'whereRaw', '@rownum  + 1 like ?', ["%{$keyword}%"]);
+            $datatables->filterColumn('rownum', function($query, $keyword) {
+                $query->whereRaw('@rownum + 1 like ?', ["%{$keyword}%"]);
+            });
         }
         return $datatables->make(true);
     }

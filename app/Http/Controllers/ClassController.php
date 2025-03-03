@@ -41,7 +41,7 @@ class ClassController extends Controller
 //            }
 //        }
 
-        DB::statement(DB::raw('set @rownum=0'));
+        DB::statement('set @rownum=0');
         $class=DB::table('lops')->join('khoas','lops.khoa_id','=','khoas.id')->select([
             DB::raw('@rownum  := @rownum  + 1 AS rownum'),
             'lops.id',
@@ -64,7 +64,9 @@ class ClassController extends Controller
             })
             ->rawColumns([ 'rownum', 'action']);
         if ($keyword = $request->get('search')['value']) {
-            $datatables->filterColumn('rownum', 'whereRaw', '@rownum  + 1 like ?', ["%{$keyword}%"]);
+            $datatables->filterColumn('rownum', function($query, $keyword) {
+                $query->whereRaw('@rownum  + 1 like ?', ["%{$keyword}%"]);
+            });
         }
         return $datatables->make(true);
     }

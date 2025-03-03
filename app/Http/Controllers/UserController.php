@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Mail;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\QueryException;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
@@ -169,7 +169,7 @@ class UserController extends Controller
             }
         }
 
-        DB::statement(DB::raw('set @rownum=0'));
+        DB::statement('set @rownum=0');
         $listuser=User::select([
             DB::raw('@rownum  := @rownum  + 1 AS rownum'),
             'id',
@@ -205,7 +205,9 @@ class UserController extends Controller
             })
             ->rawColumns([ 'rownum', 'action','level','picture']);
         if ($keyword = $request->get('search')['value']) {
-            $datatables->filterColumn('rownum', 'whereRaw', '@rownum  + 1 like ?', ["%{$keyword}%"]);
+            $datatables->filterColumn('rownum', function($query, $keyword) {
+                $query->whereRaw('@rownum  + 1 like ?', ["%{$keyword}%"]);
+            });
         }
         return $datatables->make(true);
     }

@@ -15,7 +15,7 @@ use Yajra\DataTables\Facades\DataTables;
 class PointController extends Controller
 {
     public function index(){
-        DB::statement(DB::raw('set @rownum=0'));
+        DB::statement('set @rownum=0');
         $student=DB::table('sinhviens')
             ->join('diems','sinhviens.id','=','diems.sinhvien_id')
             ->join('monhocs','diems.monhoc_id','=','monhocs.id')
@@ -40,26 +40,7 @@ class PointController extends Controller
     }
     public function datajson(Request $request){
         $where = [];
-//        if (isset($request->search['custom']['typesearch'])){
-//            if(($request->search['custom']['typesearch'])=="0"){
-//                if($request->search['custom']['name']){
-//                    $where[]= ['name','like', '%' . trim($request->search['custom']['name']) . '%'];
-//                }
-//                if($request->search['custom']['email']){
-//                    $where[]= ['email','like', '%' . trim($request->search['custom']['email']) . '%'];
-//                }
-//            }
-//            if (($request->search['custom']['typesearch'])=="1"){
-//                if($request->search['custom']['name']){
-//                    $where[]= ['name',trim($request->search['custom']['name'])];
-//                }
-//                if($request->search['custom']['email']){
-//                    $where[]= ['email',trim($request->search['custom']['email'])];
-//                }
-//            }
-//        }
-
-        DB::statement(DB::raw('set @rownum=0'));
+        DB::statement('set @rownum=0');
         $student=DB::table('sinhviens')
             ->leftJoin('diems','sinhviens.id','=','diems.sinhvien_id')
             ->leftJoin('monhocs','diems.monhoc_id','=','monhocs.id')
@@ -84,29 +65,13 @@ class PointController extends Controller
             })
             ->rawColumns([ 'rownum','hotensv']);
         if ($keyword = $request->get('search')['value']) {
-            $datatables->filterColumn('rownum', 'whereRaw', '@rownum  + 1 like ?', ["%{$keyword}%"]);
+            $datatables->filterColumn('rownum', function($query, $keyword) {
+                $query->whereRaw('@rownum + 1 like ?', ["%{$keyword}%"]);
+            });
         }
         return $datatables->make(true);
     }
-//    /**
-//     * Xóa 1 mục
-//     */
-//    public function destroy($id)
-//    {
-//        try {
-//            Lop::destroy($id);
-//            return Response::json([
-//                'error' => 0,
-//                'message' => 'Xóa thành công '
-//            ]);
-//        } catch (QueryException $e) {
-//            return Response::json([
-//                'error' => 1,
-//                'message' => $e
-//            ]);
-//        }
-//
-//    }
+
     public function savediem(Request $request){
         $diemso =$_POST['diem'];
         $sv_id=$_POST['sv_id'];
@@ -180,7 +145,7 @@ class PointController extends Controller
 
     }
     public function userindex(){
-        DB::statement(DB::raw('set @rownum=0'));
+        DB::statement('set @rownum=0');
         $student=DB::table('sinhviens')
             ->join('diems','sinhviens.id','=','diems.sinhvien_id')
             ->join('monhocs','diems.monhoc_id','=','monhocs.id')
