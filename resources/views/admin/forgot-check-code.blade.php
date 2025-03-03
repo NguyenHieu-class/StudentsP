@@ -42,10 +42,10 @@
 @section('adminlte_js')
     <!-- forgot-password -->
     <script src="{{ asset('js/forgot-password.js')}}"></script>
+    @if(Session('error')==1)
     <script>
-        @if(Session('error')==1)
         toastr.error('Mã xác nhận không đúng. Vui lòng kiểm tra lại !', 'Thông Báo!', {closeButton:true});
-        @endif
     </script>
+    @endif
 @stop
 

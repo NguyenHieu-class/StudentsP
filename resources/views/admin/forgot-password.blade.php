@@ -43,13 +43,14 @@
     </div>
     <!-- /.center -->
 @stop
+
 @section('adminlte_js')
     <!-- forgot-password -->
     <script src="{{ asset('js/forgot-password.js')}}"></script>
+    @if(Session('error')==1)
     <script>
-        @if(Session('error')==1)
         toastr.error('Email không đúng vui lòng kiểm tra lại', 'Thông Báo!', {closeButton:true});
-        @endif
     </script>
+    @endif
 @stop
 
